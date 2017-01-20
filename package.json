@@ -1,0 +1,40 @@
+{
+  "name": "smart-extend",
+  "version": "1.0.0",
+  "description": "Merge/extend objects (shallow/deep) with global/individual filters and more features",
+  "main": "index.js",
+  "mocha_opts": "-u tdd --compilers coffee:coffee-script/register --slow 1000 --timeout 5000",
+  "scripts": {
+    "build": "foreach -g 'lib/*' -x 'cat {{path}} | coffee -c -s -b > forCoverage/{{name}}.js'",
+    "coverage": "npm run build && npm run coverage:run && npm run coverage:badge",
+    "coverage:run": "forCoverage=true istanbul cover --dir test/coverage node_modules/mocha/bin/_mocha -- $npm_package_mocha_opts",
+    "coverage:badge": "badge-gen -d .config/badges/coverage",
+    "test": "mocha $npm_package_mocha_opts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielkalen/smart-extend.git"
+  },
+  "keywords": [
+    "extend",
+    "clone",
+    "filter",
+    "selective",
+    "merge",
+    "assign",
+    "properties"
+  ],
+  "author": "danielkalen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielkalen/smart-extend/issues"
+  },
+  "homepage": "https://github.com/danielkalen/smart-extend#readme",
+  "devDependencies": {
+    "badge-gen": "^1.0.0",
+    "bluebird": "^3.4.7",
+    "chai": "^3.5.0",
+    "coffee-script": "^1.12.2",
+    "mocha": "^3.2.0"
+  }
+}
