@@ -41,7 +41,7 @@ define 'clone', get: ()->
 
 define 'keys', get: ()->
 	newOptions = simpleClone(@options)
-	return (keys)=>
+	return (keys)->
 		if Array.isArray(keys)
 			newOptions.specificKeys = keys
 		else if keys and typeof keys is 'object'
@@ -51,7 +51,7 @@ define 'keys', get: ()->
 
 define 'filter', get: ()->
 	newOptions = simpleClone(@options)
-	return (filter)=>
+	return (filter)->
 		if typeof filter is 'function'
 			newOptions.globalFilter = filter
 		
@@ -60,7 +60,7 @@ define 'filter', get: ()->
 
 define 'filters', get: ()->
 	newOptions = simpleClone(@options)
-	return (filters)=>
+	return (filters)->
 		if filters and typeof filters is 'object'
 			newOptions.filters = filters
 		
