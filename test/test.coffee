@@ -1,7 +1,8 @@
 mocha = require 'mocha'
 chai = require 'chai'
-extend = require '../lib/smart-extend'
 expect = chai.expect
+sourceDir = if process.env.forCoverage then 'forCoverage' else 'lib'
+extend = require "../#{sourceDir}/smart-extend"
 
 
 suite "smart-extend", ()->
@@ -85,6 +86,31 @@ suite "smart-extend", ()->
 			expect(objB).to.eql(b:3, c:4, inner:{B:3, C:4})
 			expect(newObj).to.eql(a:1, b:3, c:4, inner:{A:1, B:3, C:4})
 			expect(newObj).to.eql(newObjB)
+
+
+
+
+	suite "Concat Arrays", ()->
+		test "Shallow", ()->
+			objA = a:1, b:[0,1,2]
+			objB = b:[3,4,5], c:4
+			newObj = extend.clone(objA, objB)
+			newObjB = extend.concat.clone(objA, objB)
+
+			expect(newObj).to.eql(a:1, b:[3,4,5], c:4)
+			expect(newObjB).to.eql(a:1, b:[0,1,2,3,4,5], c:4)
+
+		
+		test "Deep", ()->
+			objA = a:1, b:[0,1,2], inner:{A:1, B:[0,1,2]}
+			objB = b:[3,4,5], c:4, inner:{B:[3,4,5], C:4}
+			newObj = extend.deep.clone(objA, objB)
+			newObjB = extend.concat.deep.clone(objA, objB)
+
+			expect(objA).to.eql(a:1, b:[0,1,2], inner:{A:1, B:[0,1,2]})
+			expect(objB).to.eql(b:[3,4,5], c:4, inner:{B:[3,4,5], C:4})
+			expect(newObj).to.eql(a:1, b:[3,4,5], c:4, inner:{A:1, B:[3,4,5], C:4})
+			expect(newObjB).to.eql(a:1, b:[0,1,2,3,4,5], c:4, inner:{A:1, B:[0,1,2,3,4,5], C:4})
 	
 
 
@@ -191,6 +217,80 @@ suite "smart-extend", ()->
 			expect(objB).to.eql(b:3, c:4, inner:{b:3, c:4})
 			expect(newObj).to.eql(a:1, b:2, c:4, inner:{a:1, b:2, c:4})
 
+
+
+	suite "Misc", ()->
+		test "Undefined & null values won't be copied", ()->
+			objA = a:1, b:null
+			objB = b:undefined, c:4
+			newObj = extend({}, objA, objB)
+
+			expect(objA).to.eql(a:1, b:null)
+			expect(objB).to.eql(b:undefined, c:4)
+			expect(newObj).to.eql(a:1, c:4)
+
+
+		test "Non-object sources shall be ignored except for strings and functions", ()->
+			fn = ()->
+			fn.c = 4
+			newObj = extend.clone(undefined, null, 2, NaN, true, {a:1, b:true}, '^%$', fn)
+			expect(newObj).to.eql {a:1, b:true, 0:'^', 1:'%', 2:'$', c:4}
+
+
+		test "Functions can be extension targets", ()->
+			fnA = ()->
+			fnB = ()->
+			fnA.a = 1
+			fnB.b = 2
+			fnB.c = 3
+			updatedFn = extend(fnA, fnB, {b:5, d:4})
+
+			expect(updatedFn).to.equal(fnA)
+			expect(updatedFn.a).to.equal(1)
+			expect(updatedFn.b).to.equal(5)
+			expect(updatedFn.c).to.equal(3)
+			expect(updatedFn.d).to.equal(4)
+			expect(Object.keys updatedFn).to.eql(['a','b','c','d'])
+
+
+		test "Non-object/function sources shall be replaced with objects", ()->
+			source = a:1, b:2
+			targets = [true, undefined, null, NaN, 55, 'abc']
+
+			for target in targets
+				newTarget = extend(target, source)
+				expect(typeof newTarget).to.equal 'object'
+				expect(newTarget).to.eql a:1, b:2
+
+
+		test "Providing no sources shall produce non-mutating results", ()->
+			target = a:1, b:2
+			copiedA = extend(target)
+			copiedB = extend.clone()
+
+			expect(copiedA).to.equal target
+			expect(copiedB).to.eql {}
+
+
+		test "Providing invalid arguments to method flags will cause the flags to be ignored", ()->
+			objA = a:1, b:2
+			objB = b:3, c:4
+			copies = 
+				'stringKeys': extend.keys('b')({}, objA, objB)
+				'nullKeys': extend.keys(null)({}, objA, objB)
+				'stringFilter': extend.filter('b')({}, objA, objB)
+				'nullFilter': extend.filter(null)({}, objA, objB)
+				'stringFilters': extend.filters('b')({}, objA, objB)
+				'nullFilters': extend.filters(null)({}, objA, objB)
+				'arrayFilters': extend.filters(['a'])({}, objA, objB)
+
+			expect(copies.stringKeys).to.eql(a:1, b:3, c:4)
+			expect(copies.nullKeys).to.eql(a:1, b:3, c:4)
+			expect(copies.stringFilter).to.eql(a:1, b:3, c:4)
+			expect(copies.nullFilter).to.eql(a:1, b:3, c:4)
+			expect(copies.stringFilters).to.eql(a:1, b:3, c:4)
+			expect(copies.nullFilters).to.eql(a:1, b:3, c:4)
+			expect(copies.arrayFilters).to.eql(a:1, b:3, c:4)
 
 
 
