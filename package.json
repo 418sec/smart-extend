@@ -1,6 +1,6 @@
 {
   "name": "smart-extend",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Merge/extend objects (shallow/deep) with global/individual filters and more features",
   "main": "index.js",
   "mocha_opts": "-u tdd --compilers coffee:coffee-script/register --slow 1000 --timeout 5000",
