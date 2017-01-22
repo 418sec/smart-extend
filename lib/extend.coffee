@@ -29,6 +29,7 @@ module.exports = extend = (options, target, sources)->
 					target[key] = extend(options, subTarget, [sourceValue])
 
 				else
+					sourceValue = options.transform(sourceValue, key, source) if options.transform
 					target[key] = sourceValue
 
 

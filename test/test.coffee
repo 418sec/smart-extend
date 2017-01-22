@@ -141,6 +141,47 @@ suite "smart-extend", ()->
 
 
 
+	suite "Extend + Transform", ()->
+		test "Arguments", ()->
+			invoked = 0
+			objA = a:1, b:2
+			objB = b:3, c:4
+			newObj = extend.transform((value, key, object)->
+				invoked++
+				expect(key).not.to.equal 'fromSource'
+				expect(typeof object).to.equal 'object'
+				expect(typeof key).to.equal 'string'
+				expect(typeof value).to.equal 'number'
+				expect(typeof object[key]).to.equal 'number'
+				return value
+			)({'fromSource':true}, objA, objB)
+
+			expect(newObj.fromSource).to.be.true
+			expect(invoked).to.equal 4
+
+
+		test "Shallow", ()->
+			objA = a:'a1', b:'b2'
+			objB = b:'b3', c:'c4'
+			newObj = extend.clone.transform((v)->v.toUpperCase())(objA, objB)
+
+			expect(objA).to.eql(a:'a1', b:'b2')
+			expect(objB).to.eql(b:'b3', c:'c4')
+			expect(newObj).to.eql(a:'A1', b:'B3', c:'C4')
+
+		
+		test "Deep", ()->
+			objA = a:'a1', b:'b2', inner:{A:'a1', B:'b2'}
+			objB = b:'b3', c:'c4', inner:{B:'b3', C:'c4'}
+			newObj = extend.deep.clone.transform((v)->v.toUpperCase())(objA, objB)
+
+			expect(objA).to.eql(a:'a1', b:'b2', inner:{A:'a1', B:'b2'})
+			expect(objB).to.eql(b:'b3', c:'c4', inner:{B:'b3', C:'c4'})
+			expect(newObj).to.eql(a:'A1', b:'B3', c:'C4', inner:{A:'A1', B:'B3', C:'C4'})
+
+
+
+
 	suite "Extend + global filter", ()->
 		test "Arguments", ()->
 			invoked = 0
@@ -278,6 +319,8 @@ suite "smart-extend", ()->
 			copies = 
 				'stringKeys': extend.keys('b')({}, objA, objB)
 				'nullKeys': extend.keys(null)({}, objA, objB)
+				'stringTransform': extend.transform('b')({}, objA, objB)
+				'nullTransform': extend.transform(null)({}, objA, objB)
 				'stringFilter': extend.filter('b')({}, objA, objB)
 				'nullFilter': extend.filter(null)({}, objA, objB)
 				'stringFilters': extend.filters('b')({}, objA, objB)
@@ -286,6 +329,8 @@ suite "smart-extend", ()->
 
 			expect(copies.stringKeys).to.eql(a:1, b:3, c:4)
 			expect(copies.nullKeys).to.eql(a:1, b:3, c:4)
+			expect(copies.stringTransform).to.eql(a:1, b:3, c:4)
+			expect(copies.nullTransform).to.eql(a:1, b:3, c:4)
 			expect(copies.stringFilter).to.eql(a:1, b:3, c:4)
 			expect(copies.nullFilter).to.eql(a:1, b:3, c:4)
 			expect(copies.stringFilters).to.eql(a:1, b:3, c:4)

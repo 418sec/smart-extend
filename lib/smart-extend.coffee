@@ -49,6 +49,15 @@ define 'keys', get: ()->
 		
 		build(newOptions)
 
+define 'transform', get: ()->
+	newOptions = simpleClone(@options)
+	return (transform)->
+		if typeof transform is 'function'
+			newOptions.transform = transform
+		
+		build(newOptions)
+
+
 define 'filter', get: ()->
 	newOptions = simpleClone(@options)
 	return (filter)->
