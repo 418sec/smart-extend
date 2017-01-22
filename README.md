@@ -143,6 +143,25 @@ extend.keys({b:true, d:false})({}, objA, objB) //-> {b:3, d:5}
 ```
 
 
+#### `transform(transformFunction)`
+Runs the provided `transformFunction` on each property encoutered in the provided sources with the following arguments: `transformFunction(value, key, source)`. The value returned from the `transformFunction` will be used instead of the original value regardless if the transformed value is equal to `undefined`, `null`, or anything else. If this is a deep extend task (i.e. the `deep` option is on), nested objects will not be passed through the transform function and instead will have their properties iterated and passed through the transform function. If provided a filter, transforms will be invoked only for properties that passed the filter predicate.
+
+Arguments:
+- `transformFunction` - a transform function to apply to each property encoutered in the source objects (i.e. the objects we are extending/copying).
+    - `value` - The value of the current property being processed in the object.
+    - `key` - The the name (or label) of the current property being processed in the object.
+    - `source` - The object which this property belongs to.
+
+**Example**:
+```javascript
+var objA = {a:'a1', b:'b2'};
+var objB = {b:'b3', c:'c4'};
+var myTransform = function(value){return value.toUpperCase()}
+
+extend.transform(myTransform)({}, objA, objB) //-> {a:'A1', b:'B3', c:'C4'}
+```
+
+
 #### `filter(filterFunction)`
 Runs the provided `filterFunction` on each property encoutered in the provided sources with the following arguments: `filterFunction(value, key, source)`. The value returned from the `filterFunction` will be used to determine whether or not to copy the subject property - if the value is a truthy value the value property will be copied and if the value is a falsey value it will be omitted.
 
@@ -156,7 +175,7 @@ Arguments:
 ```javascript
 var objA = {a:1, b:10};
 var objB = {b:3, c:4, d:5};
-var myFilter = function(value){return value > 3}
+var myFilter = function(value){return value > 3};
 
 extend.filter(myFilter)({}, objA, objB) //-> {b:10, c:4, d:5}
 ```
