@@ -156,9 +156,9 @@ Arguments:
 ```javascript
 var objA = {a:1, b:10};
 var objB = {b:3, c:4, d:5};
-var myFilter = function(value, key, source){
-    a
-}
+var myFilter = function(value){return value > 3}
+
+extend.filter(myFilter)({}, objA, objB) //-> {b:10, c:4, d:5}
 ```
 
 
