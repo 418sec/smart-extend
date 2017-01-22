@@ -1,6 +1,6 @@
 # smart-extend
 [![Build Status](https://travis-ci.org/danielkalen/smart-extend.svg?branch=master)](https://travis-ci.org/danielkalen/smart-extend)
-[![Coverage](.config/badges/coverage-node.png?raw=true)](https://github.com/danielkalen/simplyimport)
+[![Coverage](.config/badges/coverage.png?raw=true)](https://github.com/danielkalen/smart-extend)
 [![Code Climate](https://codeclimate.com/github/danielkalen/smart-extend/badges/gpa.svg)](https://codeclimate.com/github/danielkalen/smart-extend)
 [![NPM](https://img.shields.io/npm/v/smart-extend.svg)](https://npmjs.com/package/smart-extend)
 
