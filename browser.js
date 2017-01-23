@@ -1,11 +1,11 @@
 var slice = [].slice;
 
 (function() {
-  var _sim_2f982, extend;
-  _sim_2f982 = (function(_this) {
+  var _sim_1cd28, extend;
+  _sim_1cd28 = (function(_this) {
     return function(exports) {
       var module = {exports:exports};
-      var build, define, extend, modifiers, simpleClone;
+      var build, extend, modifiers, simpleClone;
       extend = (function(exports) {
         var module = {exports:exports};
         var isArray, isObject;
@@ -38,6 +38,9 @@ var slice = [].slice;
                     target[key] = extend(options, subTarget, [sourceValue]);
                     break;
                   default:
+                    if (options.transform) {
+                      sourceValue = options.transform(sourceValue, key, source);
+                    }
                     target[key] = sourceValue;
                 }
               }
@@ -72,88 +75,98 @@ var slice = [].slice;
           };
         }
         builder.options = options;
-        builder.__proto__ = modifiers;
+        Object.defineProperties(builder, modifiers);
         return builder;
       };
-      modifiers = build.__proto__ = {};
-      define = function(property, descriptor) {
-        return Object.defineProperty.call(Object, modifiers, property, descriptor);
+      modifiers = {
+        'deep': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            newOptions.deep = true;
+            return build(newOptions);
+          }
+        },
+        'own': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            newOptions.onlyOwn = true;
+            return build(newOptions);
+          }
+        },
+        'concat': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            newOptions.concat = true;
+            return build(newOptions);
+          }
+        },
+        'clone': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            newOptions.target = {};
+            return build(newOptions);
+          }
+        },
+        'keys': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            return function(keys) {
+              if (Array.isArray(keys)) {
+                newOptions.specificKeys = keys;
+              } else if (keys && typeof keys === 'object') {
+                newOptions.specificKeys = Object.keys(keys);
+              }
+              return build(newOptions);
+            };
+          }
+        },
+        'transform': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            return function(transform) {
+              if (typeof transform === 'function') {
+                newOptions.transform = transform;
+              }
+              return build(newOptions);
+            };
+          }
+        },
+        'filter': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            return function(filter) {
+              if (typeof filter === 'function') {
+                newOptions.globalFilter = filter;
+              }
+              return build(newOptions);
+            };
+          }
+        },
+        'filters': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            return function(filters) {
+              if (filters && typeof filters === 'object') {
+                newOptions.filters = filters;
+              }
+              return build(newOptions);
+            };
+          }
+        }
       };
-      define('deep', {
-        get: function() {
-          var newOptions;
-          newOptions = simpleClone(this.options);
-          newOptions.deep = true;
-          return build(newOptions);
-        }
-      });
-      define('own', {
-        get: function() {
-          var newOptions;
-          newOptions = simpleClone(this.options);
-          newOptions.onlyOwn = true;
-          return build(newOptions);
-        }
-      });
-      define('concat', {
-        get: function() {
-          var newOptions;
-          newOptions = simpleClone(this.options);
-          newOptions.concat = true;
-          return build(newOptions);
-        }
-      });
-      define('clone', {
-        get: function() {
-          var newOptions;
-          newOptions = simpleClone(this.options);
-          newOptions.target = {};
-          return build(newOptions);
-        }
-      });
-      define('keys', {
-        get: function() {
-          var newOptions;
-          newOptions = simpleClone(this.options);
-          return function(keys) {
-            if (Array.isArray(keys)) {
-              newOptions.specificKeys = keys;
-            } else if (keys && typeof keys === 'object') {
-              newOptions.specificKeys = Object.keys(keys);
-            }
-            return build(newOptions);
-          };
-        }
-      });
-      define('filter', {
-        get: function() {
-          var newOptions;
-          newOptions = simpleClone(this.options);
-          return function(filter) {
-            if (typeof filter === 'function') {
-              newOptions.globalFilter = filter;
-            }
-            return build(newOptions);
-          };
-        }
-      });
-      define('filters', {
-        get: function() {
-          var newOptions;
-          newOptions = simpleClone(this.options);
-          return function(filters) {
-            if (filters && typeof filters === 'object') {
-              newOptions.filters = filters;
-            }
-            return build(newOptions);
-          };
-        }
-      });
       module.exports = build({});
       return module.exports;
     };
   })(this)({});
-  extend = _sim_2f982;
+  extend = _sim_1cd28;
   if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
     module.exports = extend;
   } else if (typeof define === 'function' && define.amd) {
