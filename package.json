@@ -3,6 +3,7 @@
   "version": "1.0.3",
   "description": "Merge/extend objects (shallow/deep) with global/individual filters and more features",
   "main": "index.js",
+  "browser": "browser.js",
   "mocha_opts": "-u tdd --compilers coffee:coffee-script/register --slow 1000 --timeout 5000",
   "scripts": {
     "build": "npm run build:coverage && npm run build:browser && npm run minify",
