@@ -12,69 +12,66 @@ build = (options)->
 		builder = (target, sources...)-> extend(builder.options, target, sources)
 	
 	builder.options = options
-	builder.__proto__ = modifiers
+	Object.defineProperties(builder, modifiers)
 	return builder
 
 
-modifiers = build.__proto__ = {}
-define = (property, descriptor)-> Object.defineProperty.call(Object, modifiers, property, descriptor)
+modifiers = 
+	'deep': get: ()->
+		newOptions = simpleClone(@options)
+		newOptions.deep = true
+		return build(newOptions)
 
-define 'deep', get: ()->
-	newOptions = simpleClone(@options)
-	newOptions.deep = true
-	return build(newOptions)
+	'own': get: ()->
+		newOptions = simpleClone(@options)
+		newOptions.onlyOwn = true
+		return build(newOptions)
 
-define 'own', get: ()->
-	newOptions = simpleClone(@options)
-	newOptions.onlyOwn = true
-	return build(newOptions)
+	'concat': get: ()->
+		newOptions = simpleClone(@options)
+		newOptions.concat = true
+		return build(newOptions)
 
-define 'concat', get: ()->
-	newOptions = simpleClone(@options)
-	newOptions.concat = true
-	return build(newOptions)
+	'clone': get: ()->
+		newOptions = simpleClone(@options)
+		newOptions.target = {}
+		return build(newOptions)
 
-define 'clone', get: ()->
-	newOptions = simpleClone(@options)
-	newOptions.target = {}
-	return build(newOptions)
+	'keys': get: ()->
+		newOptions = simpleClone(@options)
+		return (keys)->
+			if Array.isArray(keys)
+				newOptions.specificKeys = keys
+			else if keys and typeof keys is 'object'
+				newOptions.specificKeys = Object.keys(keys)
+			
+			build(newOptions)
 
-define 'keys', get: ()->
-	newOptions = simpleClone(@options)
-	return (keys)->
-		if Array.isArray(keys)
-			newOptions.specificKeys = keys
-		else if keys and typeof keys is 'object'
-			newOptions.specificKeys = Object.keys(keys)
-		
-		build(newOptions)
-
-define 'transform', get: ()->
-	newOptions = simpleClone(@options)
-	return (transform)->
-		if typeof transform is 'function'
-			newOptions.transform = transform
-		
-		build(newOptions)
+	'transform': get: ()->
+		newOptions = simpleClone(@options)
+		return (transform)->
+			if typeof transform is 'function'
+				newOptions.transform = transform
+			
+			build(newOptions)
 
 
-define 'filter', get: ()->
-	newOptions = simpleClone(@options)
-	return (filter)->
-		if typeof filter is 'function'
-			newOptions.globalFilter = filter
-		
-		build(newOptions)
+	'filter': get: ()->
+		newOptions = simpleClone(@options)
+		return (filter)->
+			if typeof filter is 'function'
+				newOptions.globalFilter = filter
+			
+			build(newOptions)
 
 
-define 'filters', get: ()->
-	newOptions = simpleClone(@options)
-	return (filters)->
-		if filters and typeof filters is 'object'
-			newOptions.filters = filters
-		
-		build(newOptions)
-
+	'filters': get: ()->
+		newOptions = simpleClone(@options)
+		return (filters)->
+			if filters and typeof filters is 'object'
+				newOptions.filters = filters
+			
+			build(newOptions)
 
 
 
