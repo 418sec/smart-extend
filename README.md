@@ -101,6 +101,18 @@ extend.own({}, object)  //-> {a:1, b:2}
 ```
 
 
+#### `allowNull`
+Allows `null` values to be copied over.
+
+**Example**:
+```javascript
+var object = {a:1, b:null, c:3};
+
+extend({}, object)            //-> {a:1, c:3}
+extend.allowNull({}, object)  //-> {a:1, b:null, c:3}
+```
+
+
 #### `clone`
 Clone the specified objects without specifying a target. This is basically a shortcut in which instead of passing an empty object as the first argument (i.e. the target object), an empty object will be created internally for you.
 

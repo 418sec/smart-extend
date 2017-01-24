@@ -27,6 +27,11 @@ modifiers =
 		newOptions.onlyOwn = true
 		return build(newOptions)
 
+	'allowNull': get: ()->
+		newOptions = simpleClone(@options)
+		newOptions.allowNull = true
+		return build(newOptions)
+
 	'concat': get: ()->
 		newOptions = simpleClone(@options)
 		newOptions.concat = true
