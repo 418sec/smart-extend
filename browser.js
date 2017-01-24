@@ -1,8 +1,8 @@
 var slice = [].slice;
 
 (function() {
-  var _sim_1cd28, extend;
-  _sim_1cd28 = (function(_this) {
+  var _sim_26e33, extend;
+  _sim_26e33 = (function(_this) {
     return function(exports) {
       var module = {exports:exports};
       var build, extend, modifiers, simpleClone;
@@ -26,7 +26,7 @@ var slice = [].slice;
               for (key in source) {
                 sourceValue = source[key];
                 targetValue = target[key];
-                if (sourceValue === target || (sourceValue == null) || (options.specificKeys && options.specificKeys.indexOf(key) === -1) || (options.onlyOwn && !source.hasOwnProperty(key)) || (options.globalFilter && !options.globalFilter(sourceValue, key, source)) || (options.filters && options.filters[key] && !options.filters[key](sourceValue, key, source))) {
+                if (sourceValue === target || sourceValue === void 0 || (sourceValue === null && !options.allowNull) || (options.specificKeys && options.specificKeys.indexOf(key) === -1) || (options.onlyOwn && !source.hasOwnProperty(key)) || (options.globalFilter && !options.globalFilter(sourceValue, key, source)) || (options.filters && options.filters[key] && !options.filters[key](sourceValue, key, source))) {
                   continue;
                 }
                 switch (false) {
@@ -92,6 +92,14 @@ var slice = [].slice;
             var newOptions;
             newOptions = simpleClone(this.options);
             newOptions.onlyOwn = true;
+            return build(newOptions);
+          }
+        },
+        'allowNull': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            newOptions.allowNull = true;
             return build(newOptions);
           }
         },
@@ -166,7 +174,7 @@ var slice = [].slice;
       return module.exports;
     };
   })(this)({});
-  extend = _sim_1cd28;
+  extend = _sim_26e33;
   if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
     module.exports = extend;
   } else if (typeof define === 'function' && define.amd) {
