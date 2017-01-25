@@ -52,6 +52,16 @@ modifiers =
 			
 			build(newOptions)
 
+	'notKeys': get: ()->
+		newOptions = simpleClone(@options)
+		return (keys)->
+			if Array.isArray(keys)
+				newOptions.notKeys = keys
+			else if keys and typeof keys is 'object'
+				newOptions.notKeys = Object.keys(keys)
+			
+			build(newOptions)
+
 	'transform': get: ()->
 		newOptions = simpleClone(@options)
 		return (transform)->

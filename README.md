@@ -155,6 +155,19 @@ extend.keys({b:true, d:false})({}, objA, objB) //-> {b:3, d:5}
 ```
 
 
+#### `notKeys(array|object)`
+Same as `keys`, but instead excludes and keys matching the one of the keys provided in the array/object.
+
+**Example**:
+```javascript
+var objA = {a:1, b:2};
+var objB = {b:3, c:4, d:5};
+
+extend({}, objA, objB)                            //-> {a:1, b:3, c:4, d:5}
+extend.notKeys(['b', 'd'])({}, objA, objB)        //-> {a:1, c:4}
+extend.notKeys({a:true, c:false})({}, objA, objB) //-> {b:3, d:5}
+```
+
 #### `transform(transformFunction)`
 Runs the provided `transformFunction` on each property encoutered in the provided sources with the following arguments: `transformFunction(value, key, source)`. The value returned from the `transformFunction` will be used instead of the original value regardless if the transformed value is equal to `undefined`, `null`, or anything else. If this is a deep extend task (i.e. the `deep` option is on), nested objects will not be passed through the transform function and instead will have their properties iterated and passed through the transform function. If provided a filter, transforms will be invoked only for properties that passed the filter predicate.
 

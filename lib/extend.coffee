@@ -17,6 +17,7 @@ module.exports = extend = (options, target, sources)->
 						sourceValue is undefined or
 						(sourceValue is null and not options.allowNull) or
 						(options.specificKeys and options.specificKeys.indexOf(key) is -1) or
+						(options.notKeys and options.notKeys.indexOf(key) isnt -1) or
 						(options.onlyOwn and not source.hasOwnProperty(key)) or
 						(options.globalFilter and not options.globalFilter(sourceValue, key, source)) or
 						(options.filters and options.filters[key] and not options.filters[key](sourceValue, key, source))

@@ -156,10 +156,36 @@ suite "smart-extend", ()->
 			objA = a:1, b:2, inner:{a:1, b:2}
 			objB = b:3, c:4, inner:{b:3, c:4}
 			newObj = extend.keys(['b','c','inner']).deep({}, objA, objB)
-			newObjB = extend.keys({b:false, c:true, inner:null})({}, objA, objB)
+			newObjB = extend.keys({b:false, c:true, inner:null}).deep({}, objA, objB)
 
 			expect(objA).to.eql(a:1, b:2, inner:{a:1, b:2})
 			expect(objB).to.eql(b:3, c:4, inner:{b:3, c:4})
+			expect(newObj).to.eql(b:3, c:4, inner:{b:3, c:4})
+			expect(newObj).to.eql(newObjB)
+	
+
+
+	suite "Extend Without Specific Keys", ()->
+		test "Shallow", ()->
+			objA = a:1, b:2
+			objB = b:3, c:4, d:5
+			newObj = extend.notKeys(['a','d'])({}, objA, objB)
+			newObjB = extend.notKeys({a:false, d:true})({}, objA, objB)
+
+			expect(objA).to.eql(a:1, b:2)
+			expect(objB).to.eql(b:3, c:4, d:5)
+			expect(newObj).to.eql(b:3, c:4)
+			expect(newObj).to.eql(newObjB)
+
+		
+		test "Deep", ()->
+			objA = a:1, b:2, inner:{a:1, b:2}
+			objB = b:3, c:4, d:5, inner:{b:3, c:4, d:5}
+			newObj = extend.notKeys(['a','d']).deep({}, objA, objB)
+			newObjB = extend.notKeys({a:false, d:true}).deep({}, objA, objB)
+
+			expect(objA).to.eql(a:1, b:2, inner:{a:1, b:2})
+			expect(objB).to.eql(b:3, c:4, d:5, inner:{b:3, c:4, d:5})
 			expect(newObj).to.eql(b:3, c:4, inner:{b:3, c:4})
 			expect(newObj).to.eql(newObjB)
 
@@ -344,6 +370,8 @@ suite "smart-extend", ()->
 			copies = 
 				'stringKeys': extend.keys('b')({}, objA, objB)
 				'nullKeys': extend.keys(null)({}, objA, objB)
+				'stringNotKeys': extend.notKeys('b')({}, objA, objB)
+				'nullNotKeys': extend.notKeys(null)({}, objA, objB)
 				'stringTransform': extend.transform('b')({}, objA, objB)
 				'nullTransform': extend.transform(null)({}, objA, objB)
 				'stringFilter': extend.filter('b')({}, objA, objB)
@@ -354,6 +382,8 @@ suite "smart-extend", ()->
 
 			expect(copies.stringKeys).to.eql(a:1, b:3, c:4)
 			expect(copies.nullKeys).to.eql(a:1, b:3, c:4)
+			expect(copies.stringNotKeys).to.eql(a:1, b:3, c:4)
+			expect(copies.nullNotKeys).to.eql(a:1, b:3, c:4)
 			expect(copies.stringTransform).to.eql(a:1, b:3, c:4)
 			expect(copies.nullTransform).to.eql(a:1, b:3, c:4)
 			expect(copies.stringFilter).to.eql(a:1, b:3, c:4)
