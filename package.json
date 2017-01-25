@@ -6,6 +6,7 @@
   "browser": "browser.js",
   "mocha_opts": "-u tdd --compilers coffee:coffee-script/register --slow 1000 --timeout 5000",
   "scripts": {
+    "postversion": "npm run build",
     "build": "npm run build:coverage && npm run build:browser && npm run minify",
     "build:browser": "simplyimport -i browser.coffee | coffee -cbs --no-header > browser.js",
     "build:coverage": "foreach -g 'lib/*' -x 'cat {{path}} | coffee -cbs > forCoverage/{{name}}.js'",
