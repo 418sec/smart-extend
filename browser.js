@@ -1,11 +1,11 @@
 var slice = [].slice;
 
 (function() {
-  var _sim_2f567, extend;
-  _sim_2f567 = (function(_this) {
+  var _sim_1f097, extend;
+  _sim_1f097 = (function(_this) {
     return function(exports) {
       var module = {exports:exports};
-      var build, extend, modifiers, simpleClone;
+      var build, extend, modifiers, normalizeKeys, simpleClone;
       extend = (function(exports) {
         var module = {exports:exports};
         var isArray, isObject;
@@ -26,7 +26,7 @@ var slice = [].slice;
               for (key in source) {
                 sourceValue = source[key];
                 targetValue = target[key];
-                if (sourceValue === target || sourceValue === void 0 || (sourceValue === null && !options.allowNull) || (options.specificKeys && options.specificKeys.indexOf(key) === -1) || (options.notKeys && options.notKeys.indexOf(key) !== -1) || (options.onlyOwn && !source.hasOwnProperty(key)) || (options.globalFilter && !options.globalFilter(sourceValue, key, source)) || (options.filters && options.filters[key] && !options.filters[key](sourceValue, key, source))) {
+                if (sourceValue === target || sourceValue === void 0 || (sourceValue === null && !options.allowNull) || (options.keys && options.keys.indexOf(key) === -1) || (options.notKeys && options.notKeys.indexOf(key) !== -1) || (options.own && !source.hasOwnProperty(key)) || (options.globalFilter && !options.globalFilter(sourceValue, key, source)) || (options.filters && options.filters[key] && !options.filters[key](sourceValue, key, source))) {
                   continue;
                 }
                 switch (false) {
@@ -38,8 +38,11 @@ var slice = [].slice;
                     target[key] = extend(options, subTarget, [sourceValue]);
                     break;
                   default:
-                    if (options.transform) {
-                      sourceValue = options.transform(sourceValue, key, source);
+                    if (options.globalTransform) {
+                      sourceValue = options.globalTransform(sourceValue, key, source);
+                    }
+                    if (options.transforms && options.transforms[key]) {
+                      sourceValue = options.transforms[key](sourceValue, key, source);
                     }
                     target[key] = sourceValue;
                 }
@@ -58,6 +61,15 @@ var slice = [].slice;
           output[key] = value;
         }
         return output;
+      };
+      normalizeKeys = function(keys) {
+        if (!keys) {
+          return;
+        }
+        if (typeof keys === 'object' && !Array.isArray(keys)) {
+          return Object.keys(keys);
+        }
+        return [].concat(keys);
       };
       build = function(options) {
         var builder;
@@ -91,7 +103,7 @@ var slice = [].slice;
           get: function() {
             var newOptions;
             newOptions = simpleClone(this.options);
-            newOptions.onlyOwn = true;
+            newOptions.own = true;
             return build(newOptions);
           }
         },
@@ -124,11 +136,7 @@ var slice = [].slice;
             var newOptions;
             newOptions = simpleClone(this.options);
             return function(keys) {
-              if (Array.isArray(keys)) {
-                newOptions.specificKeys = keys;
-              } else if (keys && typeof keys === 'object') {
-                newOptions.specificKeys = Object.keys(keys);
-              }
+              newOptions.keys = normalizeKeys(keys);
               return build(newOptions);
             };
           }
@@ -138,11 +146,7 @@ var slice = [].slice;
             var newOptions;
             newOptions = simpleClone(this.options);
             return function(keys) {
-              if (Array.isArray(keys)) {
-                newOptions.notKeys = keys;
-              } else if (keys && typeof keys === 'object') {
-                newOptions.notKeys = Object.keys(keys);
-              }
+              newOptions.notKeys = normalizeKeys(keys);
               return build(newOptions);
             };
           }
@@ -153,7 +157,9 @@ var slice = [].slice;
             newOptions = simpleClone(this.options);
             return function(transform) {
               if (typeof transform === 'function') {
-                newOptions.transform = transform;
+                newOptions.globalTransform = transform;
+              } else if (transform && typeof transform === 'object') {
+                newOptions.transforms = transform;
               }
               return build(newOptions);
             };
@@ -166,18 +172,8 @@ var slice = [].slice;
             return function(filter) {
               if (typeof filter === 'function') {
                 newOptions.globalFilter = filter;
-              }
-              return build(newOptions);
-            };
-          }
-        },
-        'filters': {
-          get: function() {
-            var newOptions;
-            newOptions = simpleClone(this.options);
-            return function(filters) {
-              if (filters && typeof filters === 'object') {
-                newOptions.filters = filters;
+              } else if (filter && typeof filter === 'object') {
+                newOptions.filters = filter;
               }
               return build(newOptions);
             };
@@ -188,7 +184,7 @@ var slice = [].slice;
       return module.exports;
     };
   })(this)({});
-  extend = _sim_2f567;
+  extend = _sim_1f097;
   if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
     module.exports = extend;
   } else if (typeof define === 'function' && define.amd) {
