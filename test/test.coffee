@@ -224,7 +224,7 @@ suite "smart-extend", ()->
 		test "Deep", ()->
 			objA = a:'a1', b:'b2', inner:{A:'a1', B:'b2'}
 			objB = b:'b3', c:'c4', inner:{B:'b3', C:'c4'}
-			newObj = extend.deep.clone.transform((v)->v.toUpperCase())(objA, objB)
+			newObj = extend.deep.clone.transform((v)->v.toUpperCase?() or v)(objA, objB)
 
 			expect(objA).to.eql(a:'a1', b:'b2', inner:{A:'a1', B:'b2'})
 			expect(objB).to.eql(b:'b3', c:'c4', inner:{B:'b3', C:'c4'})

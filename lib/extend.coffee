@@ -21,6 +21,11 @@ module.exports = extend = (options, target, sources)->
 						(options.own and not source.hasOwnProperty(key)) or
 						(options.globalFilter and not options.globalFilter(sourceValue, key, source)) or
 						(options.filters and options.filters[key] and not options.filters[key](sourceValue, key, source))
+			
+			if options.globalTransform
+				sourceValue = options.globalTransform(sourceValue, key, source)
+			if options.transforms and options.transforms[key]
+				sourceValue = options.transforms[key](sourceValue, key, source)
 	
 			switch
 				when options.concat and isArray(sourceValue) and isArray(targetValue)
@@ -31,10 +36,6 @@ module.exports = extend = (options, target, sources)->
 					target[key] = extend(options, subTarget, [sourceValue])
 
 				else
-					if options.globalTransform
-						sourceValue = options.globalTransform(sourceValue, key, source)
-					if options.transforms and options.transforms[key]
-						sourceValue = options.transforms[key](sourceValue, key, source)
 					target[key] = sourceValue
 
 
