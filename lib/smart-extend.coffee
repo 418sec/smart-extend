@@ -73,15 +73,8 @@ modifiers =
 		return (filter)->
 			if typeof filter is 'function'
 				newOptions.globalFilter = filter
-			
-			build(newOptions)
-
-
-	'filters': get: ()->
-		newOptions = simpleClone(@options)
-		return (filters)->
-			if filters and typeof filters is 'object'
-				newOptions.filters = filters
+			else if filter and typeof filter is 'object'
+				newOptions.filters = filter
 			
 			build(newOptions)
 
