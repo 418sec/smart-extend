@@ -169,9 +169,7 @@ extend.notKeys({a:true, c:false})({}, objA, objB) //-> {b:3, d:5}
 ```
 
 #### `transform(transformFunction|transformMap)`
-Runs the provided `transformFunction` on each property encoutered in the provided sources with the following arguments: `transformFunction(value, key, source)`. The value returned from the `transformFunction` will be used instead of the original value regardless if the transformed value is equal to `undefined`, `null`, or anything else.
-
-If this is a deep extend task (i.e. the `deep` option is on), nested objects will not be passed through the transform function and instead will have their properties iterated and passed through the transform function. If provided a filter, transforms will be invoked only for properties that passed the filter predicate.
+Runs the provided `transformFunction` on each property encoutered in the provided sources with the following arguments: `transformFunction(value, key, source)`. The value returned from the `transformFunction` will be used instead of the original value regardless if the transformed value is equal to `undefined`, `null`, or anything else. If provided a filter, transforms will be invoked only for properties that passed the filter predicate.
 
 A `transformMap` object can be passed instead of a single function which is an object with the signature of `{property: transformFunction}`. When iterating through the source's properties, if there is a function predicate matching the currently processed property's name then it will be invoked and treated like a `filterFunction`.
 
