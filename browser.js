@@ -1,8 +1,8 @@
 var slice = [].slice;
 
 (function() {
-  var _sim_1f097, extend;
-  _sim_1f097 = (function(_this) {
+  var _sim_1ee9e, extend;
+  _sim_1ee9e = (function(_this) {
     return function(exports) {
       var module = {exports:exports};
       var build, extend, modifiers, normalizeKeys, simpleClone;
@@ -29,6 +29,12 @@ var slice = [].slice;
                 if (sourceValue === target || sourceValue === void 0 || (sourceValue === null && !options.allowNull) || (options.keys && options.keys.indexOf(key) === -1) || (options.notKeys && options.notKeys.indexOf(key) !== -1) || (options.own && !source.hasOwnProperty(key)) || (options.globalFilter && !options.globalFilter(sourceValue, key, source)) || (options.filters && options.filters[key] && !options.filters[key](sourceValue, key, source))) {
                   continue;
                 }
+                if (options.globalTransform) {
+                  sourceValue = options.globalTransform(sourceValue, key, source);
+                }
+                if (options.transforms && options.transforms[key]) {
+                  sourceValue = options.transforms[key](sourceValue, key, source);
+                }
                 switch (false) {
                   case !(options.concat && isArray(sourceValue) && isArray(targetValue)):
                     target[key] = targetValue.concat(sourceValue);
@@ -38,12 +44,6 @@ var slice = [].slice;
                     target[key] = extend(options, subTarget, [sourceValue]);
                     break;
                   default:
-                    if (options.globalTransform) {
-                      sourceValue = options.globalTransform(sourceValue, key, source);
-                    }
-                    if (options.transforms && options.transforms[key]) {
-                      sourceValue = options.transforms[key](sourceValue, key, source);
-                    }
                     target[key] = sourceValue;
                 }
               }
@@ -184,7 +184,7 @@ var slice = [].slice;
       return module.exports;
     };
   })(this)({});
-  extend = _sim_1f097;
+  extend = _sim_1ee9e;
   if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
     module.exports = extend;
   } else if (typeof define === 'function' && define.amd) {
