@@ -168,8 +168,12 @@ extend.notKeys(['b', 'd'])({}, objA, objB)        //-> {a:1, c:4}
 extend.notKeys({a:true, c:false})({}, objA, objB) //-> {b:3, d:5}
 ```
 
-#### `transform(transformFunction)`
-Runs the provided `transformFunction` on each property encoutered in the provided sources with the following arguments: `transformFunction(value, key, source)`. The value returned from the `transformFunction` will be used instead of the original value regardless if the transformed value is equal to `undefined`, `null`, or anything else. If this is a deep extend task (i.e. the `deep` option is on), nested objects will not be passed through the transform function and instead will have their properties iterated and passed through the transform function. If provided a filter, transforms will be invoked only for properties that passed the filter predicate.
+#### `transform(transformFunction|transformMap)`
+Runs the provided `transformFunction` on each property encoutered in the provided sources with the following arguments: `transformFunction(value, key, source)`. The value returned from the `transformFunction` will be used instead of the original value regardless if the transformed value is equal to `undefined`, `null`, or anything else.
+
+If this is a deep extend task (i.e. the `deep` option is on), nested objects will not be passed through the transform function and instead will have their properties iterated and passed through the transform function. If provided a filter, transforms will be invoked only for properties that passed the filter predicate.
+
+A `transformMap` object can be passed instead of a single function which is an object with the signature of `{property: transformFunction}`. When iterating through the source's properties, if there is a function predicate matching the currently processed property's name then it will be invoked and treated like a `filterFunction`.
 
 Arguments:
 - `transformFunction` - a transform function to apply to each property encoutered in the source objects (i.e. the objects we are extending/copying).
@@ -177,7 +181,7 @@ Arguments:
     - `key` - The the name (or label) of the current property being processed in the object.
     - `source` - The object which this property belongs to.
 
-**Example**:
+**Example (transformFunction)**:
 ```javascript
 var objA = {a:'a1', b:'b2'};
 var objB = {b:'b3', c:'c4'};
@@ -186,9 +190,23 @@ var myTransform = function(value){return value.toUpperCase()}
 extend.transform(myTransform)({}, objA, objB) //-> {a:'A1', b:'B3', c:'C4'}
 ```
 
+**Example (transformMap)**:
+```javascript
+var objA = {a:'a1', b:'b2'};
+var objB = {b:'b3', c:'c4'};
 
-#### `filter(filterFunction)`
-Runs the provided `filterFunction` on each property encoutered in the provided sources with the following arguments: `filterFunction(value, key, source)`. The value returned from the `filterFunction` will be used to determine whether or not to copy the subject property - if the value is a truthy value the value property will be copied and if the value is a falsey value it will be omitted.
+extend.transform({
+    a: (value) => value.toUpperCase()
+    c: (value) => value.toUpperCase()+'!'
+})({}, objA, objB)
+//-> {a:'A1', b:'b3', c:'C4!'}
+```
+
+
+#### `filter(filterFunction|filterMap)`
+Runs the provided `filterFunction` on each property encoutered in the provided sources with the following arguments: `filterFunction(value, key, source)`. The value returned from the `filterFunction` will be used to determine whether or not to copy the subject property - if the value is a truthy value the value property will be copied and if the value is a falsey value it will be omitted. 
+
+A `filterMap` object can be passed instead of a single function which is an object with the signature of `{property: filterFunction}`. When iterating through the source's properties, if there is a function predicate matching the currently processed property's name then it will be invoked and treated like a `filterFunction`.
 
 Arguments:
 - `filterFunction` - a filter predicate to apply to each property encoutered. Return `true` to copy the property, otherwise return `false` to not copy the property.
@@ -196,7 +214,7 @@ Arguments:
     - `key` - The the name (or label) of the current property being processed in the object.
     - `source` - The object which this property belongs to.
 
-**Example**:
+**Example (filterFunction)**:
 ```javascript
 var objA = {a:1, b:10};
 var objB = {b:3, c:4, d:5};
@@ -205,17 +223,13 @@ var myFilter = function(value){return value > 3};
 extend.filter(myFilter)({}, objA, objB) //-> {b:10, c:4, d:5}
 ```
 
-
-#### `filters(filterMap)`
-Similar to the `filter` function but instead of accepting a function which will be applied to all encoutered properties, it accepts an object mapping individual filter functions to specific properties. The `filterMap` is an object with the signature of `{property: filterFunction}`. When iterating through the source's properties, if there is a function predicate matching the currently processed property's name then it will be invoked and treated like a `filterFunction`.
-
-**Example**:
+**Example (filterMap)**:
 ```javascript
 var objA = {a:1, b:5, c:3};
 var objB = {a:3, b:2, c:5, e:0};
 var objC = {a:10, b:'20', c:30, d:40};
 
-extend.filters({
+extend.filter({
     a: (value) => value < 2
     b: (value) => typeof value === 'string'
     c: (value) => value < 10
