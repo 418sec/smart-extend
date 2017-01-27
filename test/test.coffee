@@ -192,7 +192,7 @@ suite "smart-extend", ()->
 
 
 
-	suite "Extend + Transform", ()->
+	suite "Extend + global transform", ()->
 		test "Arguments", ()->
 			invoked = 0
 			objA = a:1, b:2
@@ -229,6 +229,35 @@ suite "smart-extend", ()->
 			expect(objA).to.eql(a:'a1', b:'b2', inner:{A:'a1', B:'b2'})
 			expect(objB).to.eql(b:'b3', c:'c4', inner:{B:'b3', C:'c4'})
 			expect(newObj).to.eql(a:'A1', b:'B3', c:'C4', inner:{A:'A1', B:'B3', C:'C4'})
+
+
+
+
+	suite "Extend + transforms", ()->
+		test "Shallow", ()->
+			objA = a:'a1', b:'b2'
+			objB = b:'b3', c:'c4'
+			newObj = extend.clone.transform(
+				a: (v)->v.toUpperCase()
+				c: (v)->v.toUpperCase()+'!'
+			)(objA, objB)
+
+			expect(objA).to.eql(a:'a1', b:'b2')
+			expect(objB).to.eql(b:'b3', c:'c4')
+			expect(newObj).to.eql(a:'A1', b:'b3', c:'C4!')
+
+		
+		test "Deep", ()->
+			objA = a:'a1', b:'b2', inner:{a:'a1', b:'b2'}
+			objB = b:'b3', c:'c4', inner:{b:'b3', c:'c4'}
+			newObj = extend.deep.clone.transform(
+				a: (v)->v.toUpperCase()
+				c: (v)->v.toUpperCase()+'!'
+			)(objA, objB)
+
+			expect(objA).to.eql(a:'a1', b:'b2', inner:{a:'a1', b:'b2'})
+			expect(objB).to.eql(b:'b3', c:'c4', inner:{b:'b3', c:'c4'})
+			expect(newObj).to.eql(a:'A1', b:'b3', c:'C4!', inner:{a:'A1', b:'b3', c:'C4!'})
 
 
 
@@ -286,14 +315,14 @@ suite "smart-extend", ()->
 				expect(typeof object[key]).to.equal 'number'
 				return value > 2
 			
-			extend.filters(a:filter, b:filter)({}, objA, objB)
+			extend.filter(a:filter, b:filter)({}, objA, objB)
 			expect(invoked).to.equal 3
 		
 
 		test "Shallow", ()->
 			objA = a:1, b:2
 			objB = b:3, c:4
-			newObj = extend.filters(b:(v)-> v<3)({}, objA, objB)
+			newObj = extend.filter(b:(v)-> v<3)({}, objA, objB)
 
 			expect(objA).to.eql(a:1, b:2)
 			expect(objB).to.eql(b:3, c:4)
@@ -303,7 +332,7 @@ suite "smart-extend", ()->
 		test "Deep", ()->
 			objA = a:1, b:2, inner:{a:1, b:2}
 			objB = b:3, c:4, inner:{b:3, c:4}
-			newObj = extend.deep.filters(b:(v)-> v<3)({}, objA, objB)
+			newObj = extend.deep.filter(b:(v)-> v<3)({}, objA, objB)
 
 			expect(objA).to.eql(a:1, b:2, inner:{a:1, b:2})
 			expect(objB).to.eql(b:3, c:4, inner:{b:3, c:4})
@@ -376,21 +405,15 @@ suite "smart-extend", ()->
 				'nullTransform': extend.transform(null)({}, objA, objB)
 				'stringFilter': extend.filter('b')({}, objA, objB)
 				'nullFilter': extend.filter(null)({}, objA, objB)
-				'stringFilters': extend.filters('b')({}, objA, objB)
-				'nullFilters': extend.filters(null)({}, objA, objB)
-				'arrayFilters': extend.filters(['a'])({}, objA, objB)
 
-			expect(copies.stringKeys).to.eql(a:1, b:3, c:4)
+			expect(copies.stringKeys).to.eql(b:3)
 			expect(copies.nullKeys).to.eql(a:1, b:3, c:4)
-			expect(copies.stringNotKeys).to.eql(a:1, b:3, c:4)
+			expect(copies.stringNotKeys).to.eql(a:1, c:4)
 			expect(copies.nullNotKeys).to.eql(a:1, b:3, c:4)
 			expect(copies.stringTransform).to.eql(a:1, b:3, c:4)
 			expect(copies.nullTransform).to.eql(a:1, b:3, c:4)
 			expect(copies.stringFilter).to.eql(a:1, b:3, c:4)
 			expect(copies.nullFilter).to.eql(a:1, b:3, c:4)
-			expect(copies.stringFilters).to.eql(a:1, b:3, c:4)
-			expect(copies.nullFilters).to.eql(a:1, b:3, c:4)
-			expect(copies.arrayFilters).to.eql(a:1, b:3, c:4)
 
 
 
