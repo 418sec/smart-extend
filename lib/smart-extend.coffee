@@ -29,7 +29,7 @@ modifiers =
 
 	'own': get: ()->
 		newOptions = simpleClone(@options)
-		newOptions.onlyOwn = true
+		newOptions.own = true
 		return build(newOptions)
 
 	'allowNull': get: ()->
@@ -63,7 +63,9 @@ modifiers =
 		newOptions = simpleClone(@options)
 		return (transform)->
 			if typeof transform is 'function'
-				newOptions.transform = transform
+				newOptions.globalTransform = transform
+			else if transform and typeof transform is 'object'
+				newOptions.transforms = transform
 			
 			build(newOptions)
 

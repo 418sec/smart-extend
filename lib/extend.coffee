@@ -18,7 +18,7 @@ module.exports = extend = (options, target, sources)->
 						(sourceValue is null and not options.allowNull) or
 						(options.keys and options.keys.indexOf(key) is -1) or
 						(options.notKeys and options.notKeys.indexOf(key) isnt -1) or
-						(options.onlyOwn and not source.hasOwnProperty(key)) or
+						(options.own and not source.hasOwnProperty(key)) or
 						(options.globalFilter and not options.globalFilter(sourceValue, key, source)) or
 						(options.filters and options.filters[key] and not options.filters[key](sourceValue, key, source))
 	
@@ -31,7 +31,10 @@ module.exports = extend = (options, target, sources)->
 					target[key] = extend(options, subTarget, [sourceValue])
 
 				else
-					sourceValue = options.transform(sourceValue, key, source) if options.transform
+					if options.globalTransform
+						sourceValue = options.globalTransform(sourceValue, key, source)
+					if options.transforms and options.transforms[key]
+						sourceValue = options.transforms[key](sourceValue, key, source)
 					target[key] = sourceValue
 
 
