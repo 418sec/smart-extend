@@ -1,19 +1,26 @@
 var slice = [].slice;
 
 (function() {
-  var _sim_1ee9e, extend;
-  _sim_1ee9e = (function(_this) {
+  var _sim_1b26b, extend;
+  _sim_1b26b = (function(_this) {
     return function(exports) {
       var module = {exports:exports};
       var build, extend, modifiers, normalizeKeys, simpleClone;
       extend = (function(exports) {
         var module = {exports:exports};
-        var isArray, isObject;
+        var isArray, isObject, shouldSkipDeep;
         isArray = function(target) {
           return Array.isArray(target);
         };
         isObject = function(target) {
           return target && typeof target === 'object';
+        };
+        shouldSkipDeep = function(target, options) {
+          if (options.notDeep) {
+            return options.notDeep.indexOf(target) !== -1;
+          } else {
+            return false;
+          }
         };
         module.exports = extend = function(options, target, sources) {
           var i, key, len, source, sourceValue, subTarget, targetValue;
@@ -39,7 +46,7 @@ var slice = [].slice;
                   case !(options.concat && isArray(sourceValue) && isArray(targetValue)):
                     target[key] = targetValue.concat(sourceValue);
                     break;
-                  case !(options.deep && isObject(sourceValue)):
+                  case !(options.deep && isObject(sourceValue) && !shouldSkipDeep(key, options)):
                     subTarget = isObject(targetValue) ? targetValue : isArray(sourceValue) ? [] : {};
                     target[key] = extend(options, subTarget, [sourceValue]);
                     break;
@@ -131,6 +138,16 @@ var slice = [].slice;
             return build(newOptions);
           }
         },
+        'notDeep': {
+          get: function() {
+            var newOptions;
+            newOptions = simpleClone(this.options);
+            return function(keys) {
+              newOptions.notDeep = normalizeKeys(keys);
+              return build(newOptions);
+            };
+          }
+        },
         'keys': {
           get: function() {
             var newOptions;
@@ -184,7 +201,7 @@ var slice = [].slice;
       return module.exports;
     };
   })(this)({});
-  extend = _sim_1ee9e;
+  extend = _sim_1b26b;
   if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
     module.exports = extend;
   } else if (typeof define === 'function' && define.amd) {
