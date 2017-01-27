@@ -4,6 +4,11 @@ simpleClone = (source)->
 	output[key] = value for key,value of source
 	return output
 
+normalizeKeys = (keys)->
+	return if not keys
+	return Object.keys(keys) if typeof keys is 'object' and not Array.isArray(keys)
+	return [].concat(keys)
+
 
 build = (options)->
 	if options.target
@@ -45,21 +50,13 @@ modifiers =
 	'keys': get: ()->
 		newOptions = simpleClone(@options)
 		return (keys)->
-			if Array.isArray(keys)
-				newOptions.specificKeys = keys
-			else if keys and typeof keys is 'object'
-				newOptions.specificKeys = Object.keys(keys)
-			
+			newOptions.keys = normalizeKeys(keys)			
 			build(newOptions)
 
 	'notKeys': get: ()->
 		newOptions = simpleClone(@options)
 		return (keys)->
-			if Array.isArray(keys)
-				newOptions.notKeys = keys
-			else if keys and typeof keys is 'object'
-				newOptions.notKeys = Object.keys(keys)
-			
+			newOptions.notKeys = normalizeKeys(keys)			
 			build(newOptions)
 
 	'transform': get: ()->
