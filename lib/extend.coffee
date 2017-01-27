@@ -4,6 +4,9 @@ isArray = (target)->
 isObject = (target)->
 	target and typeof target is 'object'
 
+shouldSkipDeep = (target, options)->
+	if options.notDeep then options.notDeep.indexOf(target) isnt -1 else false
+
 
 module.exports = extend = (options, target, sources)->
 	target = {} if not target or typeof target isnt 'object' and typeof target isnt 'function'
@@ -31,7 +34,7 @@ module.exports = extend = (options, target, sources)->
 				when options.concat and isArray(sourceValue) and isArray(targetValue)
 					target[key] = targetValue.concat(sourceValue)
 				
-				when options.deep and isObject(sourceValue)
+				when options.deep and isObject(sourceValue) and not shouldSkipDeep(key, options)
 					subTarget = if isObject(targetValue) then targetValue else if isArray(sourceValue) then [] else {}
 					target[key] = extend(options, subTarget, [sourceValue])
 

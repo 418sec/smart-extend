@@ -337,6 +337,20 @@ suite "smart-extend", ()->
 			expect(objA).to.eql(a:1, b:2, inner:{a:1, b:2})
 			expect(objB).to.eql(b:3, c:4, inner:{b:3, c:4})
 			expect(newObj).to.eql(a:1, b:2, c:4, inner:{a:1, b:2, c:4})
+	
+
+
+	suite "Extend Deep + skip deep for some", ()->
+		test "Deep", ()->
+			objA = a:{A:1, B:2}, b:{A:1, B:2}
+			objB = a:{B:3, C:4}, b:{B:3, C:4}
+			newObj = extend.deep.notDeep(['b'])({}, objA, objB)
+
+			expect(objA).to.eql(a:{A:1, B:2}, b:{A:1, B:2})
+			expect(objB).to.eql(a:{B:3, C:4}, b:{B:3, C:4})
+			expect(newObj).to.eql(a:{A:1, B:3, C:4}, b:{B:3, C:4})
+			expect(newObj.a).not.to.equal(objB.a)
+			expect(newObj.b).to.equal(objB.b)
 
 
 

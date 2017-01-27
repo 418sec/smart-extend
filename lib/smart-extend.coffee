@@ -47,6 +47,12 @@ modifiers =
 		newOptions.target = {}
 		return build(newOptions)
 
+	'notDeep': get: ()->
+		newOptions = simpleClone(@options)
+		return (keys)->
+			newOptions.notDeep = normalizeKeys(keys)			
+			build(newOptions)
+
 	'keys': get: ()->
 		newOptions = simpleClone(@options)
 		return (keys)->
