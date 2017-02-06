@@ -1,8 +1,8 @@
 var slice = [].slice;
 
 (function() {
-  var _sim_1b26b, extend;
-  _sim_1b26b = (function(_this) {
+  var _sim_1f4fa, extend;
+  _sim_1f4fa = (function(_this) {
     return function(exports) {
       var module = {exports:exports};
       var build, extend, modifiers, normalizeKeys, simpleClone;
@@ -13,7 +13,7 @@ var slice = [].slice;
           return Array.isArray(target);
         };
         isObject = function(target) {
-          return target && typeof target === 'object';
+          return target && Object.prototype.toString.call(target) === '[object Object]';
         };
         shouldSkipDeep = function(target, options) {
           if (options.notDeep) {
@@ -201,7 +201,7 @@ var slice = [].slice;
       return module.exports;
     };
   })(this)({});
-  extend = _sim_1b26b;
+  extend = _sim_1f4fa;
   if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
     module.exports = extend;
   } else if (typeof define === 'function' && define.amd) {
