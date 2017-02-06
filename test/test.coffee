@@ -397,6 +397,23 @@ suite "smart-extend", ()->
 				expect(typeof newTarget).to.equal 'object'
 				expect(newTarget).to.eql a:1, b:2
 
+		
+		test "Non-plain objects should not be casted into plain objects or iterated deeply", ()->
+			objA = a:/\w/, b:{A:/\d/}
+			objB = a:/\w/, b:{B:/\d/}
+			objA.a.prop = 'objA'
+			objB.a.prop = 'objB'
+			newObj = extend.deep.clone(objA, objB)
+
+			expect(objA.a.prop).to.equal('objA')
+			expect(objB.a.prop).to.equal('objB')
+			expect(newObj.a.prop).to.equal('objB')
+			expect(newObj.a).to.equal(objB.a)
+			expect(newObj.b).not.to.equal(objA.b)
+			expect(newObj.b).not.to.equal(objB.b)
+			expect(newObj.b.A).to.equal(objA.b.A)
+			expect(newObj.b.B).to.equal(objB.b.B)
+
 
 		test "Providing no sources shall produce non-mutating results", ()->
 			target = a:1, b:2
