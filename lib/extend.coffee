@@ -2,7 +2,7 @@ isArray = (target)->
 	Array.isArray(target)
 
 isObject = (target)->
-	target and Object::toString.call(target) is '[object Object]'
+	target and Object::toString.call(target) is '[object Object]' or isArray(target)
 
 shouldSkipDeep = (target, options)->
 	if options.notDeep then options.notDeep.indexOf(target) isnt -1 else false
