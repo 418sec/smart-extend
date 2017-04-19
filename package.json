@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "browser": {
     "./lib/index.js": "./lib/browser.js",
-    "./debug": "dist/browser.debug.js",
+    "./debug": "./lib/browser.debug.js",
     "./src": "src-browser/browser.coffee"
     },
   "mocha_opts": "-u tdd --compilers coffee:coffee-script/register --slow 1000 --timeout 5000",
