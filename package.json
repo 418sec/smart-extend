@@ -52,6 +52,6 @@
     "gzipped": "0.0.5",
     "mocha": "^3.2.0",
     "simplyimport": "^3.5.3",
-    "simplywatch": "^2.5.3"
+    "simplywatch": "^2.5.4"
   }
 }
