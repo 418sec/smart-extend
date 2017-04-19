@@ -3,6 +3,7 @@
 [![Coverage](.config/badges/coverage.png?raw=true)](https://github.com/danielkalen/smart-extend)
 [![Code Climate](https://codeclimate.com/github/danielkalen/smart-extend/badges/gpa.svg)](https://codeclimate.com/github/danielkalen/smart-extend)
 [![NPM](https://img.shields.io/npm/v/smart-extend.svg)](https://npmjs.com/package/smart-extend)
+[![NPM](https://img.shields.io/npm/dm/smart-extend.svg)](https://npmjs.com/package/smart-extend)
 
 `smart-extend` is an extension to jQuery's classic `extend()` method with additional features providing you with more power and control over your object extensions/clones. Works in both Node.JS and the browser.
 
