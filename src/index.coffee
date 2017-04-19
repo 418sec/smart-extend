@@ -12,14 +12,12 @@ normalizeKeys = (keys)->
 
 build = (options)->
 	if options.target
-		# builder = ()->
-		# 	EXPAND_ARGUMENTS(sources)
-		builder = (sources...)->
+		builder = ()->
+			EXPAND_ARGUMENTS(sources)
 			extend(builder.options, builder.options.target, sources)
 	else
-		# builder = (target)->
-		# 	EXPAND_ARGUMENTS(sources, 1)
-		builder = (target, sources...)->
+		builder = (target)->
+			EXPAND_ARGUMENTS(sources, 1)
 			extend(builder.options, target, sources)
 	
 	builder.options = options

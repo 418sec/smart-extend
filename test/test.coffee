@@ -1,8 +1,7 @@
 mocha = require 'mocha'
 chai = require 'chai'
 expect = chai.expect
-sourceDir = if process.env.forCoverage then 'lib' else 'src'
-extend = require "../#{sourceDir}/index"
+extend = require "../lib/index"
 
 
 suite "smart-extend", ()->
