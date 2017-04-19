@@ -1,5 +1,5 @@
 do ()->
-	import * as extend from ./lib/smart-extend
+	extend = import ../src/index
 
 	if module?.exports?
 		module.exports = extend

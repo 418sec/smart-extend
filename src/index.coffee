@@ -12,9 +12,15 @@ normalizeKeys = (keys)->
 
 build = (options)->
 	if options.target
-		builder = (sources...)-> extend(builder.options, builder.options.target, sources)
+		# builder = ()->
+		# 	EXPAND_ARGUMENTS(sources)
+		builder = (sources...)->
+			extend(builder.options, builder.options.target, sources)
 	else
-		builder = (target, sources...)-> extend(builder.options, target, sources)
+		# builder = (target)->
+		# 	EXPAND_ARGUMENTS(sources, 1)
+		builder = (target, sources...)->
+			extend(builder.options, target, sources)
 	
 	builder.options = options
 	Object.defineProperties(builder, modifiers)
