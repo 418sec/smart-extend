@@ -4,10 +4,15 @@ simpleClone = (source)->
 	output[key] = value for key,value of source
 	return output
 
-normalizeKeys = (keys)->
-	return if not keys
-	return Object.keys(keys) if typeof keys is 'object' and not Array.isArray(keys)
-	return [].concat(keys)
+normalizeKeys = (keys)-> if keys
+	output = {}
+	if typeof keys isnt 'object'
+		output[keys] = true
+	else
+		keys = Object.keys(keys) if not Array.isArray(keys)
+		output[key] = true for key in keys
+
+	return output
 
 
 build = (options)->

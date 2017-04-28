@@ -6,10 +6,10 @@ isObject = (target)->
 
 shouldDeepExtend = (options, target, parentKey)->
 	if options.deep
-		if options.notDeep then options.notDeep.indexOf(target) is -1 else true
+		if options.notDeep then not options.notDeep[target] else true
 
 	else if options.deepOnly
-		options.deepOnly.indexOf(target) isnt -1 or parentKey and shouldDeepExtend(options, parentKey)
+		options.deepOnly[target] or parentKey and shouldDeepExtend(options, parentKey)
 
 	# else false
 
@@ -25,8 +25,8 @@ module.exports = extend = (options, target, sources, parentKey)->
 			continue if sourceValue is target or
 						sourceValue is undefined or
 						(sourceValue is null and not options.allowNull) or
-						(options.keys and options.keys.indexOf(key) is -1) or
-						(options.notKeys and options.notKeys.indexOf(key) isnt -1) or
+						(options.keys and not options.keys[key]) or
+						(options.notKeys and options.notKeys[key]) or
 						(options.own and not source.hasOwnProperty(key)) or
 						(options.globalFilter and not options.globalFilter(sourceValue, key, source)) or
 						(options.filters and options.filters[key] and not options.filters[key](sourceValue, key, source))
