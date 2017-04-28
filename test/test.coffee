@@ -147,6 +147,31 @@ suite "smart-extend", ()->
 			expect(newObjB).to.eql(a:1, b:null, c:4, inner:{A:1, B:null, C:4})
 	
 
+	suite "Null Deletes", ()->
+		test "Shallow", ()->
+			objA = a:1, b:2
+			objB = b:null, c:4
+			newObj = extend({}, objA, objB)
+			newObjB = extend.nullDeletes({}, objA, objB)
+
+			expect(objA).to.eql(a:1, b:2)
+			expect(objB).to.eql(b:null, c:4)
+			expect(newObj).to.eql(a:1, b:2, c:4)
+			expect(newObjB).to.eql(a:1, c:4)
+
+		
+		test "Deep", ()->
+			objA = a:1, b:2, inner:{A:1, B:2}
+			objB = b:null, c:4, inner:{B:null, C:4}
+			newObj = extend.deep({}, objA, objB)
+			newObjB = extend.nullDeletes.deep({}, objA, objB)
+
+			expect(objA).to.eql(a:1, b:2, inner:{A:1, B:2})
+			expect(objB).to.eql(b:null, c:4, inner:{B:null, C:4})
+			expect(newObj).to.eql(a:1, b:2, c:4, inner:{A:1, B:2, C:4})
+			expect(newObjB).to.eql(a:1, c:4, inner:{A:1, C:4})
+	
+
 
 	suite "Extend Specific Keys", ()->
 		test "Shallow", ()->

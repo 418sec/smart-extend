@@ -46,6 +46,11 @@ modifiers =
 		newOptions.allowNull = true
 		return build(newOptions)
 
+	'nullDeletes': get: ()->
+		newOptions = simpleClone(@options)
+		newOptions.nullDeletes = true
+		return build(newOptions)
+
 	'concat': get: ()->
 		newOptions = simpleClone(@options)
 		newOptions.concat = true

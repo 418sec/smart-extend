@@ -24,13 +24,16 @@ module.exports = extend = (options, target, sources, parentKey)->
 			
 			continue if sourceValue is target or
 						sourceValue is undefined or
-						(sourceValue is null and not options.allowNull) or
+						(sourceValue is null and not options.allowNull and not options.nullDeletes) or
 						(options.keys and not options.keys[key]) or
 						(options.notKeys and options.notKeys[key]) or
 						(options.own and not source.hasOwnProperty(key)) or
 						(options.globalFilter and not options.globalFilter(sourceValue, key, source)) or
 						(options.filters and options.filters[key] and not options.filters[key](sourceValue, key, source))
 			
+			if sourceValue is null and options.nullDeletes
+				delete target[key]
+				continue
 			if options.globalTransform
 				sourceValue = options.globalTransform(sourceValue, key, source)
 			if options.transforms and options.transforms[key]
