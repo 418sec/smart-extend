@@ -57,6 +57,12 @@ modifiers =
 			newOptions.notDeep = normalizeKeys(keys)			
 			build(newOptions)
 
+	'deepOnly': get: ()->
+		newOptions = simpleClone(@options)
+		return (keys)->
+			newOptions.deepOnly = normalizeKeys(keys)			
+			build(newOptions)
+
 	'keys': get: ()->
 		newOptions = simpleClone(@options)
 		return (keys)->
