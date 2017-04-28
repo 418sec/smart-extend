@@ -27,13 +27,13 @@ suite "smart-extend", ()->
 
 		
 		test "Deep Only Specific", ()->
-			objA = a:1, b:2, nested:{A:1, B:2}, nested2:{A:1, B:2}
-			objB = b:3, c:4, nested:{B:3, C:4}, nested2:{B:3, C:4}
+			objA = a:1, b:2, nested:{A:1, B:2}, nested2:{A:1, B:2, nested3:{A:1}}
+			objB = b:3, c:4, nested:{B:3, C:4}, nested2:{B:3, C:4, nested3:{B:3}}
 			newObj = extend.deepOnly('nested2')({}, objA, objB)
 
-			expect(objA).to.eql(a:1, b:2, nested:{A:1, B:2}, nested2:{A:1, B:2})
-			expect(objB).to.eql(b:3, c:4, nested:{B:3, C:4}, nested2:{B:3, C:4})
-			expect(newObj).to.eql(a:1, b:3, c:4, nested:{B:3, C:4}, nested2:{A:1, B:3, C:4})
+			expect(objA).to.eql(a:1, b:2, nested:{A:1, B:2}, nested2:{A:1, B:2, nested3:{A:1}})
+			expect(objB).to.eql(b:3, c:4, nested:{B:3, C:4}, nested2:{B:3, C:4, nested3:{B:3}})
+			expect(newObj).to.eql(a:1, b:3, c:4, nested:{B:3, C:4}, nested2:{A:1, B:3, C:4, nested3:{A:1,B:3}})
 	
 
 

@@ -4,17 +4,17 @@ isArray = (target)->
 isObject = (target)->
 	target and Object::toString.call(target) is '[object Object]' or isArray(target)
 
-shouldDeepExtend = (target, options)->
+shouldDeepExtend = (options, target, parentKey)->
 	if options.deep
 		if options.notDeep then options.notDeep.indexOf(target) is -1 else true
 
 	else if options.deepOnly
-		options.deepOnly.indexOf(target) isnt -1
+		options.deepOnly.indexOf(target) isnt -1 or parentKey and shouldDeepExtend(options, parentKey)
 
 	# else false
 
 
-module.exports = extend = (options, target, sources)->
+module.exports = extend = (options, target, sources, parentKey)->
 	target = {} if not target or typeof target isnt 'object' and typeof target isnt 'function'
 
 	for source in sources when source?
@@ -40,9 +40,9 @@ module.exports = extend = (options, target, sources)->
 				when options.concat and isArray(sourceValue) and isArray(targetValue)
 					target[key] = targetValue.concat(sourceValue)
 				
-				when shouldDeepExtend(key, options) and isObject(sourceValue)
+				when shouldDeepExtend(options, key, parentKey) and isObject(sourceValue)
 					subTarget = if isObject(targetValue) then targetValue else if isArray(sourceValue) then [] else {}
-					target[key] = extend(options, subTarget, [sourceValue])
+					target[key] = extend(options, subTarget, [sourceValue], key)
 
 				else
 					target[key] = sourceValue
