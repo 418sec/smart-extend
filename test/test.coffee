@@ -353,6 +353,31 @@ suite "smart-extend", ()->
 
 
 
+	suite.skip "Extend special objects", ()->
+		test "Shallow", ()->
+			errObj = new Error('some message')
+			errObj.a = 1
+			errObj.b = 3
+			fnObj = ()->
+			fnObj.a = 1
+			fnObj.b = 3
+
+			cloneStd =
+				err: extend.clone(errObj)
+				fn: extend.clone(fnObj)
+
+			expect(cloneStd.err).to.eql {}
+			expect(cloneStd.fn).to.eql {}
+			
+			cloneSpecial =
+				err: extend.clone.allowSpecial(errObj)
+				fn: extend.clone.allowSpecial(fnObj)
+
+			expect(clonseStd.err).to.eql {}
+			expect(clonseStd.fn).to.eql {}
+
+
+
 	suite "Misc", ()->
 		test "Undefined & null values won't be copied", ()->
 			objA = a:1, b:null
