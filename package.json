@@ -1,6 +1,6 @@
 {
   "name": "smart-extend",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Merge/extend objects (shallow/deep) with global/individual filters and more features",
   "main": "./lib/index.js",
   "browser": {
