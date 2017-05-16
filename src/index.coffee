@@ -1,8 +1,4 @@
 extend = require './extend'
-simpleClone = (source)->
-	output = {}
-	output[key] = value for key,value of source
-	return output
 
 normalizeKeys = (keys)-> if keys
 	output = {}
@@ -15,97 +11,99 @@ normalizeKeys = (keys)-> if keys
 	return output
 
 
-build = (options)->
-	if options.target
-		builder = ()->
-			EXPAND_ARGUMENTS(sources)
-			extend(builder.options, builder.options.target, sources)
-	else
-		builder = (target)->
-			EXPAND_ARGUMENTS(sources, 1)
-			extend(builder.options, target, sources)
+newBuilder = (isBase)->
+	builder = (target)->
+		EXPAND_ARGUMENTS(sources)
+		if builder.options.target
+			theTarget = builder.options.target
+		else
+			theTarget = target
+			sources.shift()
+		
+		extend(builder.options, theTarget, sources)
 	
-	builder.options = options
+	builder.isBase = true if isBase
+	builder.options = {}
 	Object.defineProperties(builder, modifiers)
 	return builder
 
 
 modifiers = 
 	'deep': get: ()->
-		newOptions = simpleClone(@options)
-		newOptions.deep = true
-		return build(newOptions)
+		_ = if @isBase then newBuilder() else @
+		_.options.deep = true
+		return _
 
 	'own': get: ()->
-		newOptions = simpleClone(@options)
-		newOptions.own = true
-		return build(newOptions)
+		_ = if @isBase then newBuilder() else @
+		_.options.own = true
+		return _
 
 	'allowNull': get: ()->
-		newOptions = simpleClone(@options)
-		newOptions.allowNull = true
-		return build(newOptions)
+		_ = if @isBase then newBuilder() else @
+		_.options.allowNull = true
+		return _
 
 	'nullDeletes': get: ()->
-		newOptions = simpleClone(@options)
-		newOptions.nullDeletes = true
-		return build(newOptions)
+		_ = if @isBase then newBuilder() else @
+		_.options.nullDeletes = true
+		return _
 
 	'concat': get: ()->
-		newOptions = simpleClone(@options)
-		newOptions.concat = true
-		return build(newOptions)
+		_ = if @isBase then newBuilder() else @
+		_.options.concat = true
+		return _
 
 	'clone': get: ()->
-		newOptions = simpleClone(@options)
-		newOptions.target = {}
-		return build(newOptions)
+		_ = if @isBase then newBuilder() else @
+		_.options.target = {}
+		return _
 
 	'notDeep': get: ()->
-		newOptions = simpleClone(@options)
+		_ = if @isBase then newBuilder() else @
 		return (keys)->
-			newOptions.notDeep = normalizeKeys(keys)			
-			build(newOptions)
+			_.options.notDeep = normalizeKeys(keys)			
+			return _
 
 	'deepOnly': get: ()->
-		newOptions = simpleClone(@options)
+		_ = if @isBase then newBuilder() else @
 		return (keys)->
-			newOptions.deepOnly = normalizeKeys(keys)			
-			build(newOptions)
+			_.options.deepOnly = normalizeKeys(keys)			
+			return _
 
 	'keys': get: ()->
-		newOptions = simpleClone(@options)
+		_ = if @isBase then newBuilder() else @
 		return (keys)->
-			newOptions.keys = normalizeKeys(keys)			
-			build(newOptions)
+			_.options.keys = normalizeKeys(keys)			
+			return _
 
 	'notKeys': get: ()->
-		newOptions = simpleClone(@options)
+		_ = if @isBase then newBuilder() else @
 		return (keys)->
-			newOptions.notKeys = normalizeKeys(keys)			
-			build(newOptions)
+			_.options.notKeys = normalizeKeys(keys)			
+			return _
 
 	'transform': get: ()->
-		newOptions = simpleClone(@options)
+		_ = if @isBase then newBuilder() else @
 		return (transform)->
 			if typeof transform is 'function'
-				newOptions.globalTransform = transform
+				_.options.globalTransform = transform
 			else if transform and typeof transform is 'object'
-				newOptions.transforms = transform
+				_.options.transforms = transform
 			
-			build(newOptions)
+			return _
 
 
 	'filter': get: ()->
-		newOptions = simpleClone(@options)
+		_ = if @isBase then newBuilder() else @
 		return (filter)->
 			if typeof filter is 'function'
-				newOptions.globalFilter = filter
+				_.options.globalFilter = filter
 			else if filter and typeof filter is 'object'
-				newOptions.filters = filter
+				_.options.filters = filter
 			
-			build(newOptions)
+			return _
 
 
 
-module.exports = build({})
+module.exports = newBuilder(true)

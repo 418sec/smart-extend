@@ -20,7 +20,7 @@
     "coverage:run": "forCoverage=true istanbul cover --dir coverage node_modules/mocha/bin/_mocha -- $npm_package_mocha_opts",
     "coverage:badge": "badge-gen -d .config/badges/coverage",
     "minify": "closure-service lib/browser.debug.js > lib/browser.js",
-    "watch": "simplywatch -g 'src/*' -x 'npm run compile'",
+    "watch": "simplywatch -g 'src/*' -x 'npm run compile -s'",
     "test": "mocha $npm_package_mocha_opts"
   },
   "repository": {

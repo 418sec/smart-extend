@@ -26,6 +26,16 @@ suite "smart-extend", ()->
 			expect(newObj).to.eql(a:1, b:3, c:4, inner:{A:1, B:3, C:4})
 
 		
+		test "Deep Array", ()->
+			objA = a:1, b:2, inner:['A','B']
+			objB = b:3, c:4, inner:[null,'B','C']
+			newObj = extend.deep({}, objA, objB)
+
+			expect(objA).to.eql(a:1, b:2, inner:['A','B'])
+			expect(objB).to.eql(b:3, c:4, inner:[null, 'B','C'])
+			expect(newObj).to.eql(a:1, b:3, c:4, inner:['A','B','C'])
+
+		
 		test "Deep Only Specific", ()->
 			objA = a:1, b:2, nested:{A:1, B:2}, nested2:{A:1, B:2, nested3:{A:1}}
 			objB = b:3, c:4, nested:{B:3, C:4}, nested2:{B:3, C:4, nested3:{B:3}}
@@ -80,6 +90,8 @@ suite "smart-extend", ()->
 			objB = b:3, c:4
 			newObj = extend.clone(objA, objB)
 
+			expect(newObj).not.to.equal(objA)
+			expect(newObj).not.to.equal(objB)
 			expect(objA).to.eql(a:1, b:2)
 			expect(objB).to.eql(b:3, c:4)
 			expect(newObj).to.eql(a:1, b:3, c:4)
@@ -91,6 +103,10 @@ suite "smart-extend", ()->
 			newObj = extend.deep.clone(objA, objB)
 			newObjB = extend.clone.deep(objA, objB)
 
+			expect(newObj).not.to.equal(objA)
+			expect(newObj).not.to.equal(objB)
+			expect(newObjB).not.to.equal(objA)
+			expect(newObjB).not.to.equal(objB)
 			expect(objA).to.eql(a:1, b:2, inner:{A:1, B:2})
 			expect(objB).to.eql(b:3, c:4, inner:{B:3, C:4})
 			expect(newObj).to.eql(a:1, b:3, c:4, inner:{A:1, B:3, C:4})
