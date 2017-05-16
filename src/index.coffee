@@ -4,10 +4,15 @@ simpleClone = (source)->
 	output[key] = value for key,value of source
 	return output
 
-normalizeKeys = (keys)->
-	return if not keys
-	return Object.keys(keys) if typeof keys is 'object' and not Array.isArray(keys)
-	return [].concat(keys)
+normalizeKeys = (keys)-> if keys
+	output = {}
+	if typeof keys isnt 'object'
+		output[keys] = true
+	else
+		keys = Object.keys(keys) if not Array.isArray(keys)
+		output[key] = true for key in keys
+
+	return output
 
 
 build = (options, isBase)->
@@ -47,6 +52,11 @@ modifiers =
 		_.options.allowSpecial = true
 		return _
 
+	'nullDeletes': get: ()->
+		newOptions = simpleClone(@options)
+		newOptions.nullDeletes = true
+		return build(newOptions)
+
 	'concat': get: ()->
 		_ = if @isBase then build({}) else @
 		_.options.concat = true
@@ -65,6 +75,12 @@ modifiers =
 		return (keys)->
 			_.options.notDeep = normalizeKeys(keys)			
 			return _
+
+	'deepOnly': get: ()->
+		newOptions = simpleClone(@options)
+		return (keys)->
+			newOptions.deepOnly = normalizeKeys(keys)			
+			build(newOptions)
 
 	'keys': get: ()->
 		_ = if @isBase then build({}) else @
