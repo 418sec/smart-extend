@@ -26,6 +26,16 @@ suite "smart-extend", ()->
 			expect(newObj).to.eql(a:1, b:3, c:4, inner:{A:1, B:3, C:4})
 
 		
+		test "Deep Array", ()->
+			objA = a:1, b:2, inner:['A','B']
+			objB = b:3, c:4, inner:[null,'B','C']
+			newObj = extend.deep({}, objA, objB)
+
+			expect(objA).to.eql(a:1, b:2, inner:['A','B'])
+			expect(objB).to.eql(b:3, c:4, inner:[null, 'B','C'])
+			expect(newObj).to.eql(a:1, b:3, c:4, inner:['A','B','C'])
+
+		
 		test "Deep Only Specific", ()->
 			objA = a:1, b:2, nested:{A:1, B:2}, nested2:{A:1, B:2, nested3:{A:1}}
 			objB = b:3, c:4, nested:{B:3, C:4}, nested2:{B:3, C:4, nested3:{B:3}}
