@@ -80,6 +80,8 @@ suite "smart-extend", ()->
 			objB = b:3, c:4
 			newObj = extend.clone(objA, objB)
 
+			expect(newObj).not.to.equal(objA)
+			expect(newObj).not.to.equal(objB)
 			expect(objA).to.eql(a:1, b:2)
 			expect(objB).to.eql(b:3, c:4)
 			expect(newObj).to.eql(a:1, b:3, c:4)
@@ -91,6 +93,10 @@ suite "smart-extend", ()->
 			newObj = extend.deep.clone(objA, objB)
 			newObjB = extend.clone.deep(objA, objB)
 
+			expect(newObj).not.to.equal(objA)
+			expect(newObj).not.to.equal(objB)
+			expect(newObjB).not.to.equal(objA)
+			expect(newObjB).not.to.equal(objB)
 			expect(objA).to.eql(a:1, b:2, inner:{A:1, B:2})
 			expect(objB).to.eql(b:3, c:4, inner:{B:3, C:4})
 			expect(newObj).to.eql(a:1, b:3, c:4, inner:{A:1, B:3, C:4})
@@ -385,31 +391,6 @@ suite "smart-extend", ()->
 			expect(newObj).to.eql(a:{A:1, B:3, C:4}, b:{B:3, C:4})
 			expect(newObj.a).not.to.equal(objB.a)
 			expect(newObj.b).to.equal(objB.b)
-
-
-
-	suite.skip "Extend special objects", ()->
-		test "Shallow", ()->
-			errObj = new Error('some message')
-			errObj.a = 1
-			errObj.b = 3
-			fnObj = ()->
-			fnObj.a = 1
-			fnObj.b = 3
-
-			cloneStd =
-				err: extend.clone(errObj)
-				fn: extend.clone(fnObj)
-
-			expect(cloneStd.err).to.eql {}
-			expect(cloneStd.fn).to.eql {}
-			
-			cloneSpecial =
-				err: extend.clone.allowSpecial(errObj)
-				fn: extend.clone.allowSpecial(fnObj)
-
-			expect(clonseStd.err).to.eql {}
-			expect(clonseStd.fn).to.eql {}
 
 
 
