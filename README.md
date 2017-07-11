@@ -7,7 +7,7 @@
 
 `smart-extend` is an extension to jQuery's classic `extend()` method with additional features providing you with more power and control over your object extensions/clones. Works in both Node.JS and the browser.
 
-**Features Summary**
+## Highlights
 - Deep/shallow object cloning/extension.
 - Optional array concatination.
 - Optionally copy only 'own' properties.
@@ -15,6 +15,24 @@
 - Apply filter functions to allow only specific properties/values to be copied.
 - Expressive API.
 - Clean, Focused, and actively maintained.
+
+# Table of Contents
+- [Highlights](#highlights)
+- [Example Usage](#example-usage)
+- [Usage](#usage)
+  - [Options](#options)
+      - [own](#own)
+      - [deep](#deep)
+      - [notDeep()](#notdeeparrayobject)
+      - [deepOnly()](#deeponlyarrayobject)
+      - [allowNull](#allownull)
+      - [nullDeletes](#nulldeletes)
+      - [clone](#clone)
+      - [concat](#concat)
+      - [keys](#keysarrayobject)
+      - [notKeys()](#notkeysarrayobject)
+      - [transform()](#transformtransformfunctiontransformmap)
+      - [filter()](#filterfilterfunctionfiltermap)
 
 # Example Usage
 ```javascript
