@@ -43,7 +43,7 @@
   },
   "homepage": "https://github.com/danielkalen/smart-extend#readme",
   "devDependencies": {
-    "badge-gen": "^1.0.0",
+    "badge-gen": "^1.0.2",
     "bluebird": "^3.4.7",
     "chai": "^3.5.0",
     "closure-compiler-service": "^0.6.1",
