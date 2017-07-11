@@ -9,14 +9,12 @@
   },
   "browserify": {
     "transform": [
-      "simplyimport/compat"
+      "simplyimport/compat",
+      "coffeeify-cached",
+      "./.config/transforms/macros"
     ]
   },
   "simplyimport": {
-    "transform": [
-      "coffeeify-cached",
-      "./.config/transforms/macros"
-    ],
     "finalTransform": [
       ".config/transforms/minify-super",
       ".config/transforms/minify-rename",
