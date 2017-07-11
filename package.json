@@ -48,8 +48,6 @@
     "chai": "^3.5.0",
     "coffee-register": "^0.1.0",
     "falafel": "^2.1.0",
-    "foreach-cli": "^1.6.1",
-    "gzipped": "0.0.5",
     "google-closure-compiler-js": "^20170626.0.0",
     "mocha": "^3.2.0",
     "simplyimport": "^3.5.3",
