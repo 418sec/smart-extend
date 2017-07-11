@@ -173,7 +173,7 @@ modifiers = {
 
 module.exports = exports = newBuilder(true);
 
-exports.version = "1.7.1";
+exports.version = "1.7.2";
 
 ;
 return module.exports;
