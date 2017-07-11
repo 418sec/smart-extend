@@ -46,11 +46,11 @@
     "badge-gen": "^1.0.2",
     "bluebird": "^3.4.7",
     "chai": "^3.5.0",
-    "closure-compiler-service": "^0.6.1",
     "coffee-script": "^1.12.2",
     "falafel": "^2.1.0",
     "foreach-cli": "^1.6.1",
     "gzipped": "0.0.5",
+    "google-closure-compiler-js": "^20170626.0.0",
     "mocha": "^3.2.0",
     "simplyimport": "^3.5.3",
     "simplywatch": "^2.5.4"
