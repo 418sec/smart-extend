@@ -1,7 +1,7 @@
 mocha = require 'mocha'
 chai = require 'chai'
 expect = chai.expect
-extend = require "../lib/index"
+extend = require "../dist/smart-extend.debug"
 
 
 suite "smart-extend", ()->
