@@ -69,6 +69,20 @@ Perform copy/extension with the specified [options](#options). `options` can be 
 
 
 ## Options
+#### `own`
+Only copies 'own' properties of object and not inherited properties.
+
+**Example**:
+```javascript
+var SomeConstructor = function(){this.a = 1; this.b = 2;}
+SomeConstructor.prototype.inherited = 'abc'
+var object = new SomeConstructor();
+
+extend({}, object)      //-> {a:1, b:2, inherited:'abc'}
+extend.own({}, object)  //-> {a:1, b:2}
+```
+
+
 #### `deep`
 Performs a recursive copy of the specified objects.
 
@@ -88,17 +102,33 @@ extend.deep({}, objA, objB) //-> {a:1, b:3, c:4, inner:{a:1, b:3, c:4}}
 ```
 
 
-#### `own`
-Only copies 'own' properties of object and not inherited properties.
+#### `notDeep(array|object)`
+When paired with [`.deep`](#deep) it performs a recursive copy of the specified objects while performing a shallow copy for the provided keys.
 
 **Example**:
 ```javascript
-var SomeConstructor = function(){this.a = 1; this.b = 2;}
-SomeConstructor.prototype.inherited = 'abc'
-var object = new SomeConstructor();
+var objA = {one:{a:1, b:2}, two:{a:1, b:2}};
+var objB = {one:{b:3, c:4}, two:{b:3, c:4}};
+var clone = extend.deep.notDeep(['two'])({}, objA, objB);
 
-extend({}, object)      //-> {a:1, b:2, inherited:'abc'}
-extend.own({}, object)  //-> {a:1, b:2}
+clone.one === objB.one //-> false
+clone.two === objB.two //-> true
+clone //-> {one:{a:1, b:3, c:4}, two:{b:3, c:4}};
+```
+
+
+#### `deepOnly(array|object)`
+When paired with [`.deep`](#deep) it performs a recursive copy of the specified objects while performing a shallow copy for the provided keys.
+
+**Example**:
+```javascript
+var objA = {one:{a:1, b:2}, two:{a:1, b:2}};
+var objB = {one:{b:3, c:4}, two:{b:3, c:4}};
+var clone = extend.deep.deepOnly(['two'])({}, objA, objB);
+
+clone.one === objB.one   //-> true
+clone.two === objB.two   //-> false
+clone                    //-> {one:{b:3, c:4}, two:{a:1, b:3, c:4}};
 ```
 
 
@@ -111,6 +141,20 @@ var object = {a:1, b:null, c:3};
 
 extend({}, object)            //-> {a:1, c:3}
 extend.allowNull({}, object)  //-> {a:1, b:null, c:3}
+```
+
+
+#### `nullDeletes`
+Encounters of `null` values in the source object will delete/remove the associated key in the target object.
+
+**Example**:
+```javascript
+var object = {nested:{a:1, b:2, c:3}, c:3};
+var deletes = {nested{a:10}, c:null};
+
+extend({}, object, deletes)                  //-> {nested:{a:10}, c:3}
+extend.nullDeletes({}, object, deletes)      //-> {nested:{a:10}}
+extend.nullDeletes.deep({}, object, deletes) //-> {nested:{a:10, b:2, c:3}}
 ```
 
 
