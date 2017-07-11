@@ -106,4 +106,5 @@ modifiers =
 
 
 
-module.exports = newBuilder(true)
+module.exports = exports = newBuilder(true)
+exports.version = import '../package.json $ version'

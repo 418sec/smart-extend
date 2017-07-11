@@ -1,4 +1,6 @@
 module.exports = (file, options, file_, content)->
+	return content if not file.endsWith('.js')
+	
 	result = 
 	require('falafel') content, (node)-> if node.type is 'Identifier'
 		switch node.name

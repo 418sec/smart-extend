@@ -26,13 +26,13 @@
     "postversion": "npm run build && git commit -a -m '[Build]'",
     "prepublishOnly": "CI=1 npm run test",
     "postpublish": "git push",
-    "build": "mkdir -p dist/; npm run compile:debug && npm run compile:release",
-    "compile:debug": "simplyimport bundle src/index.coffee -d --target node --umd smart-extend > dist/smart-extend.debug.js",
-    "compile:release": "simplyimport bundle src/index.coffee --target node --umd smart-extend > dist/smart-extend.js",
+    "build": "mkdir -p dist/; npm run build:debug && npm run build:release",
+    "build:debug": "simplyimport bundle src/index.coffee -d --target node --umd smart-extend > dist/smart-extend.debug.js",
+    "build:release": "simplyimport bundle src/index.coffee --target node --umd smart-extend > dist/smart-extend.js",
     "coverage": "npm run coverage:run && npm run coverage:badge",
     "coverage:run": "forCoverage=true istanbul cover --dir coverage node_modules/mocha/bin/_mocha -- $npm_package_mocha_opts",
     "coverage:badge": "badge-gen -d .config/badges/coverage",
-    "watch": "simplywatch -g 'src/*' -x 'npm run compile:debug -s'",
+    "watch": "simplywatch -g 'src/*' -x 'npm run build:debug -s'",
     "test": "mocha $npm_package_mocha_opts"
   },
   "repository": {

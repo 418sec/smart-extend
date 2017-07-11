@@ -8,7 +8,7 @@ exports: {}
 };
 })({}, {
 0: function (require, module, exports) {
-var extend, modifiers, newBuilder, normalizeKeys;
+var exports, extend, modifiers, newBuilder, normalizeKeys;
 
 extend = require(1);
 
@@ -171,7 +171,9 @@ modifiers = {
   }
 };
 
-module.exports = newBuilder(true);
+module.exports = exports = newBuilder(true);
+
+exports.version = "1.7.0";
 
 ;
 return module.exports;
