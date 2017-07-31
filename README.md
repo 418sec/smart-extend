@@ -301,3 +301,5 @@ extend.filter({
 
 
 
+## License
+MIT © [Daniel Kalen](https://github.com/danielkalen)
