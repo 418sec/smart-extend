@@ -9,12 +9,14 @@
   },
   "browserify": {
     "transform": [
-      "simplyimport/compat",
-      "coffeeify-cached",
-      "./.config/transforms/macros"
+      "simplyimport/compat"
     ]
   },
   "simplyimport": {
+    "transform": [
+      "coffeeify-cached",
+      "./.config/transforms/macros"
+    ],
     "finalTransform": [
       ".config/transforms/minify-super",
       ".config/transforms/minify-rename",
@@ -63,7 +65,7 @@
     "extend": "^3.0.1",
     "google-closure-compiler-js": "^20170626.0.0",
     "mocha": "^3.2.0",
-    "simplyimport": "^4.0.0-s4",
+    "simplyimport": "^4.0.0-s21",
     "simplywatch": "^3.0.0-l2",
     "uglify-js": "^3.0.24"
   },
