@@ -25,7 +25,7 @@
   },
   "mocha_opts": "-u tdd --compilers coffee:coffee-register --slow 1000 --timeout 5000",
   "scripts": {
-    "postversion": "npm run build && git commit -a -m '[Build]'",
+    "postversion": "npm run build && git add . && git commit -a -m '[Build]'",
     "prepublishOnly": "CI=1 npm run test",
     "postpublish": "git push",
     "build": "mkdir -p dist/; npm run build:debug && npm run build:release",
