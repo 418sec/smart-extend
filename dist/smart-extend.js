@@ -83,7 +83,7 @@ var extend = _extend = function extend(options, target, sources, parentKey) {
   }
 
   return target;
-};var version = "1.7.3";var modifiers, newBuilder, normalizeKeys, primaryBuilder;
+};var version = "1.7.4";var modifiers, newBuilder, normalizeKeys, primaryBuilder;
 
 normalizeKeys = function normalizeKeys(keys) {
   var i, key, len, output;
