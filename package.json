@@ -3,38 +3,18 @@
   "version": "1.7.3",
   "description": "Merge/extend objects (shallow/deep) with global/individual filters and more features",
   "main": "dist/smart-extend.js",
-  "browser": {
-    "./debug": "dist/smart-extend.debug.js",
-    "./dist/smart-extend.js": "src/index.coffee"
-  },
-  "browserify": {
-    "transform": [
-      "simplyimport/compat"
-    ]
-  },
-  "simplyimport": {
-    "transform": [
-      "coffeeify-cached",
-      "./.config/transforms/macros"
-    ],
-    "finalTransform": [
-      ".config/transforms/minify-super",
-      ".config/transforms/minify-rename",
-      ".config/transforms/minify-simple"
-    ]
-  },
+  "module": "dist/smart-extend.esm.js",
+  "unpkg": "dist/smart-extend.min.js",
   "mocha_opts": "-u tdd --compilers coffee:coffee-register --slow 1000 --timeout 5000",
   "scripts": {
     "postversion": "npm run build && git add . && git commit -a -m '[Build]'",
     "prepublishOnly": "CI=1 npm run test",
     "postpublish": "git push",
-    "build": "mkdir -p dist/; npm run build:debug && npm run build:release",
-    "build:debug": "simplyimport bundle src/index.coffee -d --target node --umd smart-extend > dist/smart-extend.debug.js",
-    "build:release": "simplyimport bundle src/index.coffee --target node --umd smart-extend > dist/smart-extend.js",
+    "build": "rollup -c ./.config/rollup.lib.js",
     "coverage": "npm run coverage:run && npm run coverage:badge",
     "coverage:run": "forCoverage=true istanbul cover --dir coverage node_modules/mocha/bin/_mocha -- $npm_package_mocha_opts",
     "coverage:badge": "badge-gen -d .config/badges/coverage",
-    "watch": "simplywatch -g 'src/*' -x 'npm run build:debug -s'",
+    "watch": "rollup --watch -c ./.config/rollup.lib.js",
     "test": "mocha $npm_package_mocha_opts"
   },
   "repository": {
@@ -57,19 +37,24 @@
   },
   "homepage": "https://github.com/danielkalen/smart-extend#readme",
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
     "badge-gen": "^1.0.2",
     "bluebird": "^3.4.7",
     "chai": "^3.5.0",
     "coffee-register": "^0.1.0",
     "coffeeify-cached": "^2.1.1",
+    "coffeescript": "^2.3.2",
     "extend": "^3.0.1",
-    "google-closure-compiler-js": "^20170626.0.0",
+    "falafel": "^2.1.0",
     "mocha": "^3.2.0",
-    "simplyimport": "^4.0.0-s21",
-    "simplywatch": "^3.0.0-l2",
-    "uglify-js": "^3.0.24"
+    "rollup": "^1.1.2",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-coffee-script": "^2.0.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-terser": "^4.0.2"
   },
-  "dependencies": {
-    "falafel": "^2.1.0"
-  }
+  "dependencies": {}
 }

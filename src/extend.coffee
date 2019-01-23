@@ -14,7 +14,7 @@ shouldDeepExtend = (options, target, parentKey)->
 	# else false
 
 
-module.exports = extend = (options, target, sources, parentKey)->
+export default extend = (options, target, sources, parentKey)->
 	target = {} if not target or typeof target isnt 'object' and typeof target isnt 'function'
 
 	for source in sources when source?

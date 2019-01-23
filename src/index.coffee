@@ -1,4 +1,4 @@
-extend = require './extend'
+import extend from './extend'
 
 normalizeKeys = (keys)-> if keys
 	output = {}
@@ -106,5 +106,7 @@ modifiers =
 
 
 
-module.exports = exports = newBuilder(true)
-exports.version = import '../package.json $ version'
+import {version} from '../package.json'
+primaryBuilder = newBuilder(true)
+primaryBuilder.version = version
+export default primaryBuilder
