@@ -45,6 +45,10 @@ var extend = _extend = function extend(options, target, sources, parentKey) {
 
     if (source != null) {
       for (key in source) {
+        // prototype pollution mitigation
+        if (key.includes('__proto__') || key.includes('constructor') || key.includes('prototype')) {
+          break;
+        }
         sourceValue = source[key];
         targetValue = target[key];
 
